@@ -1,0 +1,24 @@
+{
+  "name": "azure-resource-mgmt",
+  "version": "0.0.1",
+  "description": "Tools to gather information on Azure Resource usage",
+  "main": "get-resource-groups.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "azure-resource-mgmt"
+  },
+  "keywords": [
+    "azure",
+    "resource",
+    "groups",
+    "usage"
+  ],
+  "author": "Krakenfall",
+  "license": "MIT",
+  "dependencies": {
+    "azure": "^2.0.0-preview"
+  }
+}
