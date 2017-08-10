@@ -9,3 +9,4 @@ MsRest.loginWithUsernamePassword(process.env.AZURE_USER, process.env.AZURE_PASS,
 
   // ..use the client instance to manage service resources.
 });
+
