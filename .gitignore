@@ -1,5 +1,8 @@
-# Configs
-azure-login.config
+# Script Outputs
+resources.json
+
+# VSCode Configuration
+.vscode
 
 # Logs
 logs
