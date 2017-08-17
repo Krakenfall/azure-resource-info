@@ -1,3 +1,19 @@
+class MdFile {
+    [string]$content
+
+    MdFile (
+        [string]$title
+    ) {
+        $this.content = "# $title`n"
+    }
+
+    Add (
+        [string]$content
+    ) {
+        $this.content += "$content`n"
+    }
+}
+
 function MdAnchor([string]$DisplayText, [string]$HeadingText) {
     $formattedHeading = $HeadingText.ToLower() -replace " ","-"
     return "[$DisplayText](#$formattedHeading)"
