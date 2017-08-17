@@ -75,6 +75,7 @@ try {
             $groupTable.AddRow(@("$name","[Azure Portal]($url)","``$($resource.type)``","$($resource.location)"))
         }
         MdAdd($groupTable.table + "`n")
+        MdAdd((MdAnchor -DisplayText "Go to top" -HeadingText "Table of Contents"))
     }
 
     $mdContent | Out-File "Azure-Resources.md" -Force | Out-Null
