@@ -44,7 +44,7 @@ try {
         MdAdd((MdAnchor -DisplayText "Go to top" -HeadingText "Table of Contents"))
     }
 
-    $mdContent | Out-File "Azure-Resources.md" -Force | Out-Null
+    $mdContent | Out-File "Azure-Resources-By-Group.md" -Force | Out-Null
 } finally {
     $ErrorActionPreference = "Continue"
     Remove-Module -Name MdBuilder
