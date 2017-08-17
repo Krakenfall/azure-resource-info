@@ -19,7 +19,7 @@ try {
     $mdFile.Add("### Table of Contents`n")
     $mdFile.Add("Azure Resource Groups:")
     foreach($group in $groups) {
-        $anchorLink = MdAnchor -DisplayText "$($group.name)" -HeadingText "Group $($group.name -replace '\.',' ')"
+        $anchorLink = MdHeadingAnchor -DisplayText "$($group.name)" -HeadingText "Group $($group.name -replace '\.',' ')"
         $mdFile.Add(" * $anchorLink")
     }
     $mdFile.Add("")
@@ -36,7 +36,7 @@ try {
             $groupTable.AddRow(@("$name","[Azure Portal]($url)","``$($resource.type)``","$($resource.location)"))
         }
         $mdFile.Add($groupTable.table + "`n")
-        $mdFile.Add((MdAnchor -DisplayText "Go to top" -HeadingText "Table of Contents"))
+        $mdFile.Add((MdHeadingAnchor -DisplayText "Go to top" -HeadingText "Table of Contents"))
     }
 
     $mdFile.content | Out-File "Azure-Resources-By-Group.md" -Force | Out-Null

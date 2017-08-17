@@ -14,7 +14,7 @@ class MdFile {
     }
 }
 
-function MdAnchor([string]$DisplayText, [string]$HeadingText) {
+function MdHeadingAnchor([string]$DisplayText, [string]$HeadingText) {
     $formattedHeading = $HeadingText.ToLower() -replace " ","-"
     return "[$DisplayText](#$formattedHeading)"
 }
