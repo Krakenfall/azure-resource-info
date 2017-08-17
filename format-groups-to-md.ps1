@@ -49,14 +49,16 @@ MdAdd("This is a presentation of existing Azure resources, organized by group.`n
 try {
     $ErrorActionPreference = "Stop"
     $groups = ReadJson(".\resources.json")
-
+    
     foreach($group in $groups) {
         MdAdd("## Group: $($group.name)`n")
         MdAdd("Azure Portal Link: [$($group.name)]($($azResourceLink + $group.id))`n")
         $groupTable = [MdTable]::New(@("Resource","Link","Type","Location"))
         foreach($resource in $group.resources) {
             $url = UrlEncode($azResourceLink + $resource.id)
-            $groupTable.AddRow(@("$($resource.properties.name)","[Azure Portal]($url)","$($resource.type)","$($resource.location)"))
+            if ($null -ne $resource.properties.name) { $name = $resource.properties.name }
+            elseif ($null -ne $resource.name) { $name = $resource.name }
+            $groupTable.AddRow(@("$name","[Azure Portal]($url)","$($resource.type)","$($resource.location)"))
         }
         MdAdd($groupTable.table + "`n")
     }
