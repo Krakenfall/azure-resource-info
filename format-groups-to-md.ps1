@@ -8,6 +8,11 @@ function MdAdd ([string]$content) {
     $script:mdContent += "$content`n"
 }
 
+function MdAnchor([string]$DisplayText, [string]$HeadingText) {
+    $formattedHeading = $HeadingText.ToLower() -replace " ","-"
+    return "[$DisplayText](#$formattedHeading)"
+}
+
 class MdTable {
     [int]$columnCount;
     [string]$table;
@@ -49,9 +54,18 @@ MdAdd("This is a presentation of existing Azure resources, organized by group.`n
 try {
     $ErrorActionPreference = "Stop"
     $groups = ReadJson(".\resources.json")
-    
+
+    MdAdd("### Table of Contents`n")
+    MdAdd("Azure Resource Groups:")
     foreach($group in $groups) {
-        MdAdd("## Group: $($group.name)`n")
+        $anchorLink = MdAnchor -DisplayText "$($group.name)" -HeadingText "Group $($group.name)"
+        MdAdd(" * $anchorLink")
+    }
+    MdAdd("")
+
+    # Added Group Tables
+    foreach($group in $groups) {
+        MdAdd("## Group $($group.name)`n")
         MdAdd("Azure Portal Link: [$($group.name)]($($azResourceLink + $group.id))`n")
         $groupTable = [MdTable]::New(@("Resource","Link","Type","Location"))
         foreach($resource in $group.resources) {
