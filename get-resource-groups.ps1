@@ -15,7 +15,7 @@ try {
                 try {
                     #Start-Sleep -Milliseconds 500
                     Write-Output "   Getting $($resource.name) resource data with resource type $($resource.type)"
-                    $resourceInfo = cmd.exe /c "az resource show -g `"$($item.name)`" --name `"$($resource.name)`" --resource-type `"$($resource.type)`"" | Out-String | ConvertFrom-Json
+                    $resourceInfo = cmd.exe /c "az resource show --id `"$($resource.id)`"" | Out-String | ConvertFrom-Json
                     Write-Output "   Retrieved data for resource $($resource.name)"
                     $resources.Add($resourceInfo) | Out-Null
                     Write-Output "   Added $($resource.name) resource data to group list"
@@ -37,7 +37,7 @@ try {
         $counter++
         Start-Sleep -Milliseconds 250    
     }
-    $retrievedGroups | ConvertTo-Json -Depth 100 | Out-File ".\results.json" -Force
+    $retrievedGroups | ConvertTo-Json -Depth 100 | Out-File ".\resources.json" -Force
     Write-Output 'Done'
 } finally {
     $ErrorActionPreference = "Continue"
