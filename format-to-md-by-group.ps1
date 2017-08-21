@@ -5,10 +5,6 @@ function ReadJson ([string]$filePath) {
     return (Get-Content $filePath | Out-String | ConvertFrom-Json)
 }
 
-function UrlEncode ([string]$url) {
-    return [uri]::EscapeUriString($url)
-}
-
 try {
     $ErrorActionPreference = "Stop"
     $groups = ReadJson(".\resources.json")

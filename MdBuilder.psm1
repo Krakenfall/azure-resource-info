@@ -49,3 +49,7 @@ class MdTable {
         $this.table += ($row -f $values) + "`n"
     }
 }
+
+function UrlEncode ([string]$url) {
+    return [uri]::EscapeUriString($url)
+}
