@@ -15,7 +15,7 @@ try {
     $mdFile.Add("### Table of Contents`n")
     $mdFile.Add("Azure Resource Groups:")
     foreach($group in $groups) {
-        $anchorLink = MdHeadingAnchor -DisplayText "$($group.name)" -HeadingText "Group $($group.name -replace '\.',' ')"
+        $anchorLink = MdHeadingAnchor -DisplayText "$($group.name) ($($group.resources.Count) resources)" -HeadingText "Group $($group.name -replace '\.',' ')"
         $mdFile.Add(" * $anchorLink")
     }
     $mdFile.Add("")
