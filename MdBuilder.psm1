@@ -40,7 +40,7 @@ class MdTable {
         [string[]]$values
     ) {
         if ($this.columnCount -ne $values.Count) {
-            throw "Must provide the same number of column values as there are columns"
+            throw "Must provide $($this.columnCount) column values because there are $($this.columnCount) columns"
         }
         $row = "|"
         for ($i = 0; $i -lt $this.columnCount; $i++) {
