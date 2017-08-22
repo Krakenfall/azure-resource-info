@@ -29,6 +29,7 @@ try {
             $url = UrlEncode($azResourceLink + $resource.id)
             if ($null -ne $resource.properties.name) { $name = $resource.properties.name }
             elseif ($null -ne $resource.name) { $name = $resource.name }
+            elseif ($null -ne $resource.properties.AzureResourceName) { $name = $resource.properties.AzureResourceName }
             $groupTable.AddRow(@("``$name``","[Azure Portal]($url)","``$($resource.type)``","$($resource.location)"))
         }
         $mdFile.Add($groupTable.table + "`n")
