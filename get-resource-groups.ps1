@@ -16,6 +16,13 @@ try {
                     #Start-Sleep -Milliseconds 500
                     Write-Output "   Getting $($resource.name) resource data with resource type $($resource.type)"
                     $resourceInfo = cmd.exe /c "az resource show --id `"$($resource.id)`"" | Out-String | ConvertFrom-Json
+                    if ($null -eq $resourceInfo) {
+                        Write-Output "   Failed to retrieve data for $($resource.name). Attempting again..."
+                        $resourceInfo = cmd.exe /c "az resource show --id `"$($resource.id)`"" | Out-String | ConvertFrom-Json
+                        if ($null -eq $resourceInfo) {
+                            throw "Could not retrieve data for $($resource.name)!"
+                        }
+                    }
                     Write-Output "   Retrieved data for resource $($resource.name)"
                     $resources.Add($resourceInfo) | Out-Null
                     Write-Output "   Added $($resource.name) resource data to group list"
