@@ -89,7 +89,7 @@ try {
     $mdFile.Add("Azure Resource Types:")
     foreach($type in $resources) {
         $anchorLink = MdHeadingAnchor -DisplayText "$($type.type -replace '[\./]',' ')" -HeadingText "Type $($type.type -replace '[\./]',' ')"
-        $mdFile.Add(" * $anchorLink ($($group.resources.Count) resources)")
+        $mdFile.Add(" * $anchorLink ($($type.resources.Count) resources)")
     }
     $mdFile.Add("")
 
