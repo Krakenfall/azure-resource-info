@@ -13,9 +13,30 @@ function GetAllResources([Parameter()]$groups) {
     return $resources
 }
 
-function GetResourceTypes([Parameter()]$resources) {
+function GetHighestQuantityResourceType (
+    [Parameter()]$resourcesByType
+) {
+    # Top consists of resource types with the greatest number of resources
+    # if there is a tie for the most resources, $top will contain more than one element
+    $top = New-Object System.Collections.ArrayList($null);
+    $top.Add($resourcesByType[0]) | Out-Null
+
+    for ($i = 0; $i -lt $resourcesByType.Count; $i++) {
+        if ($resourcesByType[$i].resources.Count -gt $top[0].resources.Count) {
+            # Clear $top, add new leader
+            $top = New-Object System.Collections.ArrayList($null)
+            $top.Add($resourcesByType[$i]) | Out-Null
+        } elseif ($resourcesByType[$i].resources.Count -eq $top.resources.Count) {
+            # if tie, add element to $top
+            $top.Add($resourcesByType[$i]) | Out-Null
+        }
+    }
+    return $top
+}
+
+function GetResourceTypes([Parameter()]$flatResources) {
     $types = New-Object System.Collections.ArrayList($null)
-    foreach ($resource in $resources) {
+    foreach ($resource in $flatResources) {
         if (-not $types.Contains($resource.type)) {
             $types.Add($resource.type) | Out-Null
         }
@@ -25,13 +46,13 @@ function GetResourceTypes([Parameter()]$resources) {
 
 function GetResourcesWithType(
     [string]$type, 
-    [Parameter()]$resources
+    [Parameter()]$flatResources
 ) {
     $resourcesOfType = @{
         type = $type;
         resources = New-Object System.Collections.ArrayList($null)
     }
-    foreach ($resource in $resources) {
+    foreach ($resource in $flatResources) {
         if ($type -eq $resource.type) {
             $resourcesOfType.resources.Add($resource) | Out-Null
         }
@@ -43,23 +64,32 @@ try {
     $ErrorActionPreference = "Stop"
     $groups = ReadJson(".\resources.json")
 
-    $mdFile = [MdFile]::New("Azure Resources by Type")
-    $mdFile.Add("This is a presentation of existing Azure resources, organized by type.`n")
-    
     # Process types
     $flatResources = GetAllResources($groups)
     $types = GetResourceTypes($flatResources)
     $resources = New-Object System.Collections.ArrayList($null)
     foreach ($type in $types) {
-        $typeGrouping = GetResourcesWithType -type $type -resources $flatResources
+        $typeGrouping = GetResourcesWithType -type $type -flatResources $flatResources
         $resources.Add($typeGrouping) | Out-Null
     }
+
+    $mdFile = [MdFile]::New("Azure Resources by Type")
+    $mdFile.Add("This is a presentation of existing Azure resources, organized by type.`n")
+    $mdFile.Add("### Summary`n")
+    $mdFile.Add("* $($flatResources.Count) total resources")
+    $mdFile.Add("* $($types.Count) different types of resources persistently allocated")
+    $mdFile.Add("* Type with highest volume allocated:")
+    $highestResources = GetHighestQuantityResourceType -resourcesByType $resources
+    foreach ($type in $highestResources) {
+        $mdFile.Add("   * $($type.type): $($type.resources.Count) allocated")
+    }
+    $mdFile.Add("")
 
     $mdFile.Add("### Table of Contents`n")
     $mdFile.Add("Azure Resource Types:")
     foreach($type in $resources) {
-        $anchorLink = MdHeadingAnchor -DisplayText "$($type.type -replace '[\./]',' ')  ($($group.resources.Count) resources)" -HeadingText "Type $($type.type -replace '[\./]',' ')"
-        $mdFile.Add(" * $anchorLink")
+        $anchorLink = MdHeadingAnchor -DisplayText "$($type.type -replace '[\./]',' ')" -HeadingText "Type $($type.type -replace '[\./]',' ')"
+        $mdFile.Add(" * $anchorLink ($($group.resources.Count) resources)")
     }
     $mdFile.Add("")
 
